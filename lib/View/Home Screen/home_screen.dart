@@ -48,8 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       asset["availability"] == 1
-                          ? "Borrower Status: Available"
-                          : "Borrower Status: Not Available",
+                          ? "Borrowing Status: Available"
+                          : "Borrowing Status: Not Available",
                       style: TextStyle(fontSize: 12),
                     ),
                     SizedBox(
@@ -132,105 +132,107 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (BuildContext context, StateSetter setModalState) {
           return Padding(
             padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: typeController,
-                  decoration: const InputDecoration(
-                    labelText: "Asset Type",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: "Asset Name",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: "Description",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: serialNumberController,
-                  decoration: const InputDecoration(
-                    labelText: "Serial Number",
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Availability"),
-                    Switch(
-                      value: isAvailable,
-                      onChanged: (value) {
-                        setModalState(() {
-                          isAvailable = value;
-                        });
-                      },
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: typeController,
+                    decoration: const InputDecoration(
+                      labelText: "Asset Type",
+                      border: OutlineInputBorder(),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: "Asset Name",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: "Description",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: serialNumberController,
+                    decoration: const InputDecoration(
+                      labelText: "Serial Number",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Availability"),
+                      Switch(
+                        value: isAvailable,
+                        onChanged: (value) {
+                          setModalState(() {
+                            isAvailable = value;
+                          });
                         },
-                        child: const Text("Cancel"),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                         
-                          if (isEdit) {
-                            await HomeScreenController.updateAssets(
-                              typeController.text,
-                              nameController.text,
-                              descriptionController.text,
-                              serialNumberController.text,
-                              isAvailable ? 1 : 0,
-                              assetId!,
-                            );
-                          } else {
-                            await HomeScreenController.addAsset(
-                              typeController.text,
-                              nameController.text,
-                              descriptionController.text,
-                              serialNumberController.text,
-                              isAvailable ? 1 : 0,
-                            );
-                          }
-                          await HomeScreenController.getAllAssets();
-                          if (context.mounted) {
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
                             Navigator.pop(context);
-                            setState(() {});
-                          }
-                        },
-                        child: const Text("Save"),
+                          },
+                          child: const Text("Cancel"),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (isEdit) {
+                              await HomeScreenController.updateAssets(
+                                typeController.text,
+                                nameController.text,
+                                descriptionController.text,
+                                serialNumberController.text,
+                                isAvailable ? 1 : 0,
+                                assetId!,
+                              );
+                            } else {
+                              await HomeScreenController.addAsset(
+                                typeController.text,
+                                nameController.text,
+                                descriptionController.text,
+                                serialNumberController.text,
+                                isAvailable ? 1 : 0,
+                              );
+                            }
+                            await HomeScreenController.getAllAssets();
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              setState(() {});
+                            }
+                          },
+                          child: const Text("Save"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         },
